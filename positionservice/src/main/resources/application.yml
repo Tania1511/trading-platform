@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: positionservice
+
+  datasource:
+    url: jdbc:postgresql://postgres-position:5432/positiondb
+    driver-class-name: org.postgresql.Driver
+    username: positionapp
+    password: positionapp_password
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+  kafka:
+    bootstrap-servers: kafka:9092
+
+    consumer:
+      group-id: position-service
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+      properties:
+        spring.json.value.default.type: com.tradingplatform.positionservice.event.TradeEvent
+        spring.json.trusted.packages: com.tradingplatform.positionservice.event
+      auto-offset-reset: earliest
+
+#    producer:
+#      No producer config needed yet - this service doesn't publish anything of its own currently
+
+
+logging:
+  level:
+    com.tradingplatform.positionservice: DEBUG

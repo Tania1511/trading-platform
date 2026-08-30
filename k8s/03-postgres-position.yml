@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-position-pvc
+  namespace: trading-platform
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-position
+  namespace: trading-platform
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-position
+  template:
+    metadata:
+      labels:
+        app: postgres-position
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: postgres-position-secret
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+          readinessProbe:
+            exec:
+              command: ["pg_isready","-U","positionapp","-d","positiondb"]
+            initialDelaySeconds: 5
+            periodSeconds: 5
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-position-pvc
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-position
+  namespace: trading-platform
+spec:
+  selector:
+    app: postgres-position
+  ports:
+    - port: 5432
+      targetPort: 5432

@@ -1,0 +1,49 @@
+package com.tradingplatform.positionservice.service;
+
+import com.tradingplatform.positionservice.event.TradeEvent;
+import com.tradingplatform.positionservice.model.Position;
+import com.tradingplatform.positionservice.model.ProcessedTradeEvent;
+import com.tradingplatform.positionservice.repository.PositionRepository;
+import com.tradingplatform.positionservice.repository.ProcessedTradeRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.Optional;
+
+@Service
+@Slf4j
+public class PositionService {
+
+    private final PositionRepository positionRepository;
+    private final ProcessedTradeRepository processedTradeRepository;
+
+    public PositionService(PositionRepository positionRepository,ProcessedTradeRepository processedTradeRepository) {
+        this.positionRepository = positionRepository;
+        this.processedTradeRepository = processedTradeRepository;
+    }
+
+    @Transactional
+    public void applyTrade(TradeEvent trade){
+        if(processedTradeRepository.existsById(trade.eventId())){
+            log.info("Skipping already processed TradeEvent  eventId={} (duplicate entry)",trade.eventId());
+            return;
+        }
+
+        applyFillToPosition(trade.buyClientOrderId(), true,trade.symbol(),trade.price(), trade.quantity());
+        applyFillToPosition(trade.sellClientOrderId(), false,trade.symbol(),trade.price(), trade.quantity());
+        processedTradeRepository.save(new ProcessedTradeEvent(trade.eventId()));
+    }
+
+    @Transactional
+    private void applyFillToPosition(String accountKey, boolean isBuy, String symbol, BigDecimal price, BigDecimal quantity) {
+        Position position = positionRepository.findByAccountKeyAndSymbol(accountKey, symbol).orElseGet(() ->new Position(accountKey, symbol));
+        position.applyFill(isBuy,quantity,price);
+        positionRepository.save(position);
+
+        log.info("Applied fill to position accountKey={}, symbol={}, isBuy={} qty={} price={} -> newQty={}, newAvgCost={}, realizedPnl={}",
+                accountKey,symbol,isBuy,quantity,price,
+                position.getQuantity(),position.getAverageCost(),position.getRealizedPnl());
+    }
+}
