@@ -50,8 +50,8 @@ jobs:
           context: orderGateway
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/ordergateway:latest
-            ghcr.io/${{ github.repository_owner }}/ordergateway:${{ github.sha }}
+            ghcr.io/${{ lower(github.repository_owner) }}/ordergateway:latest
+            ghcr.io/${{ lower(github.repository_owner) }}/ordergateway:${{ github.sha }}
             
         
         
