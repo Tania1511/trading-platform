@@ -4,12 +4,12 @@ on:
   push:
     branches: [main]
     paths:
-      - 'order-gateway/**'
+      - 'orderGateway/**'
       - '.github/workflows/order-gateway-ci.yml'
   pull_request:
     branches: [main]
     paths:
-      - 'order-gateway/**'
+      - 'orderGateway/**'
       - '.github/workflows/order-gateway-ci.yml'
 
 
