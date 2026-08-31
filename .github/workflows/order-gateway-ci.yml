@@ -1,0 +1,57 @@
+name: Order Gateway CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'order-gateway/**'
+      - '.github/workflows/order-gateway-ci.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'order-gateway/**'
+      - '.github/workflows/order-gateway-ci.yml'
+
+
+defaults:
+  run:
+    working-directory: order-gateway
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Run tests
+        run: mvn -B test
+
+      - name: Log in to GitHub Container Registry
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/login-action
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        if: github.event_name == 'push && github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v6
+        with:
+          context: order-gateway
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/order-gateway:latest
+            ghcr.io/${{ github.repository_owner }}/order-gateway:${{ github.sha }}
+            
+        
+        

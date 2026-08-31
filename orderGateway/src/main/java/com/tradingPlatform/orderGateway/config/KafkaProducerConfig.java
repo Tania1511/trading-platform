@@ -17,7 +17,7 @@ public class KafkaProducerConfig {
 
     @Bean
     public ProducerFactory<String, OrderPlacedEvent> producerFactory(KafkaProperties kafkaProperties){
-        Map<String,Object> configProps = new HashMap<>(kafkaProperties.buildProducerProperties());
+        Map<String,Object> configProps = new HashMap<>(kafkaProperties.buildProducerProperties()); // get properties defined in application.yml
 //        configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,"kafka:9092");
 //        configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 //        configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JacksonJsonSerializer.class);
