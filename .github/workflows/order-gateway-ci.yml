@@ -43,6 +43,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Compute lowercase image owner
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          echo "IMAGE_OWNER=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
+          
+
       - name: Build and push Docker image
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v6
@@ -50,8 +56,8 @@ jobs:
           context: orderGateway
           push: true
           tags: |
-            ghcr.io/${{ lower(github.repository_owner) }}/ordergateway:latest
-            ghcr.io/${{ lower(github.repository_owner) }}/ordergateway:${{ github.sha }}
+            ghcr.io/${{ env.IMAGE_OWNER }}/order-gateway:latest
+            ghcr.io/${{ env.IMAGE_OWNER }}/order-gateway:${{ github.sha }}
             
         
         
