@@ -3,7 +3,6 @@ package com.tradingplatform.positionservice.controller;
 import com.tradingplatform.positionservice.dto.PositionResponse;
 import com.tradingplatform.positionservice.dto.TradeResponse;
 import com.tradingplatform.positionservice.service.PositionService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 

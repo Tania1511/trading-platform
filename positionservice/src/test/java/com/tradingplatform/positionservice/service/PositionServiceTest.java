@@ -1,10 +1,13 @@
 package com.tradingplatform.positionservice.service;
 
+import com.tradingplatform.positionservice.event.PositionUpdatedEventPublisher;
 import com.tradingplatform.positionservice.event.TradeEvent;
 import com.tradingplatform.positionservice.model.Position;
 import com.tradingplatform.positionservice.model.ProcessedTradeEvent;
+import com.tradingplatform.positionservice.model.Trade;
 import com.tradingplatform.positionservice.repository.PositionRepository;
 import com.tradingplatform.positionservice.repository.ProcessedTradeRepository;
+import com.tradingplatform.positionservice.repository.TradeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +34,11 @@ public class PositionServiceTest {
     @Mock
     private ProcessedTradeRepository processedTradeRepository;
 
+    @Mock
+    private TradeRepository tradeRepository;
+    @Mock
+    private PositionUpdatedEventPublisher positionUpdatedEventPublisher;
+
     @InjectMocks
     private PositionService positionService;
 
@@ -38,7 +46,7 @@ public class PositionServiceTest {
 
     @BeforeEach
     void setup(){
-        positionService = new PositionService(positionRepository,processedTradeRepository);
+        positionService = new PositionService(positionRepository,processedTradeRepository,tradeRepository,positionUpdatedEventPublisher);
 
         tradeEvent = new TradeEvent(UUID.randomUUID(), UUID.randomUUID(), "AAPL",
                                     UUID.randomUUID(),UUID.randomUUID(),"buy-1","sell-1",
@@ -56,6 +64,8 @@ public class PositionServiceTest {
         verify(positionRepository,times(2)).findByAccountKeyAndSymbol(anyString(),anyString());
         verify(positionRepository,times(2)).save(any(Position.class));
         verify(processedTradeRepository,times(1)).save(any(ProcessedTradeEvent.class));
+        verify(tradeRepository,times(1)).save(any(Trade.class));
+        verify(positionUpdatedEventPublisher,times(2)).publish(any(Position.class));
     }
 
     @Test
@@ -66,9 +76,9 @@ public class PositionServiceTest {
 
         verify(positionRepository,never()).findByAccountKeyAndSymbol(anyString(),anyString());
         verify(positionRepository,never()).save(any(Position.class));
-
-
         verify(processedTradeRepository,never()).save(any(ProcessedTradeEvent.class));
+        verify(tradeRepository,never()).save(any(Trade.class));
+        verify(positionUpdatedEventPublisher,never()).publish(any(Position.class));
     }
 
 }
