@@ -11,7 +11,7 @@ public class OrderEventListener {
     private static final Logger log = LoggerFactory.getLogger(OrderEventListener.class);
 
 
-//    @KafkaListener(topics = "order-event", groupId = "order-gateway-local-consumer")
+//    @KafkaListener(topics = "order-events", groupId = "order-gateway-local-consumer")
     public void onOrderPlaced(OrderPlacedEvent event){
         log.info("Consume OrderPlacedEvent: eventId={}, orderID={}, symbol={}, side={}, price={},quantity={}",
                 event.eventId(),event.orderId(), event.symbol(), event.side(),event.price(), event.quantity());

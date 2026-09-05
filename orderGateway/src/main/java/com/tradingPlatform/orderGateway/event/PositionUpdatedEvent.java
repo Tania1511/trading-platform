@@ -1,0 +1,15 @@
+package com.tradingPlatform.orderGateway.event;
+
+import java.math.BigDecimal;
+import java.time.Instant;
+
+public record PositionUpdatedEvent(
+        String accountKey,
+        String symbol,
+        BigDecimal averageCost,
+        BigDecimal quantity,
+        BigDecimal realizedPnL,
+        Instant updatedAt
+) {
+
+}

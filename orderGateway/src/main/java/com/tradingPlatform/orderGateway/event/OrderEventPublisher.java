@@ -17,7 +17,7 @@ public class OrderEventPublisher {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    private static final  String TOPIC = "order-event";
+    private static final  String TOPIC = "order-events";
 
 
     public void publishOrderPlaced(Order order){
