@@ -17,7 +17,7 @@ public class PositionUpdatedEventPublisher {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    private static final String TOPIC = "position-event";
+    private static final String TOPIC = "position-events";
 
     public void publish(Position position){
         PositionUpdatedEvent event = new PositionUpdatedEvent(

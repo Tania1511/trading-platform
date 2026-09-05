@@ -6,7 +6,7 @@ import java.time.Instant;
 public record PositionUpdatedEvent(
         String accountKey,
         String symbol,
-        BigDecimal price,
+        BigDecimal averageCost,
         BigDecimal quantity,
         BigDecimal realizedPnL,
         Instant updatedAt

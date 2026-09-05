@@ -35,6 +35,8 @@ public class Trade {
     @Column(name = "occurred_at", nullable = false)
     private Instant occurredAt;
 
+    protected Trade(){}
+
     public Trade(UUID tradeId, String symbol, String buyClientOrderId, String sellClientOrderId, BigDecimal price, BigDecimal quantity, Instant occurredAt){
         this.tradeId = tradeId;
         this.symbol = symbol;
