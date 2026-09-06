@@ -3,6 +3,7 @@ package com.tradingPlatform.orderGateway.service;
 import com.tradingPlatform.orderGateway.cache.IdempotencyCacheService;
 import com.tradingPlatform.orderGateway.dto.OrderResponse;
 import com.tradingPlatform.orderGateway.dto.PlaceOrderRequest;
+import com.tradingPlatform.orderGateway.event.OrderCanceledEventPublisher;
 import com.tradingPlatform.orderGateway.event.OrderEventPublisher;
 import com.tradingPlatform.orderGateway.model.Order;
 import com.tradingPlatform.orderGateway.model.OrderSide;
@@ -34,6 +35,9 @@ public class OrderServiceTest {
 
     @Mock
     private IdempotencyCacheService idempotencyCacheService;
+
+    @Mock
+    private OrderCanceledEventPublisher orderCanceledEventPublisher;
 
     @InjectMocks
     private OrderService orderService;

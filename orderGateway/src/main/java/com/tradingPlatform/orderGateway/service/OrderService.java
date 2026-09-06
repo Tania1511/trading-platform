@@ -3,6 +3,7 @@ package com.tradingPlatform.orderGateway.service;
 import com.tradingPlatform.orderGateway.cache.IdempotencyCacheService;
 import com.tradingPlatform.orderGateway.dto.OrderResponse;
 import com.tradingPlatform.orderGateway.dto.PlaceOrderRequest;
+import com.tradingPlatform.orderGateway.event.OrderCanceledEventPublisher;
 import com.tradingPlatform.orderGateway.event.OrderEventPublisher;
 import com.tradingPlatform.orderGateway.model.Order;
 import com.tradingPlatform.orderGateway.repository.OrderRepository;
@@ -20,11 +21,13 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderEventPublisher orderEventPublisher;
     private final IdempotencyCacheService idempotencyCacheService;
+    private final OrderCanceledEventPublisher orderCanceledEventPublisher;
 
-    public OrderService (OrderRepository orderRepository,OrderEventPublisher orderEventPublisher, IdempotencyCacheService idempotencyCacheService) {
+    public OrderService (OrderRepository orderRepository, OrderEventPublisher orderEventPublisher, IdempotencyCacheService idempotencyCacheService, OrderCanceledEventPublisher orderCanceledEventPublisher) {
         this.orderRepository = orderRepository;
         this.orderEventPublisher = orderEventPublisher;
         this.idempotencyCacheService = idempotencyCacheService;
+        this.orderCanceledEventPublisher = orderCanceledEventPublisher;
     }
 
     @Transactional
@@ -60,6 +63,7 @@ public class OrderService {
     public OrderResponse cancelOrder(UUID id){
         Order order = orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
         order.cancel();
+        orderCanceledEventPublisher.publishOrderCanceled(order);
         return OrderResponse.from(order);
     }
 }
