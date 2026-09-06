@@ -15,7 +15,7 @@ public class OrderEventListener {
         this.orderBookManager = orderBookManager;
     }
 
-    @KafkaListener(topics = "order-event",groupId = "matching-engine")
+    @KafkaListener(topics = "order-events",groupId = "matching-engine")
     public void onOrderPlaced(OrderPlacedEvent event){
         orderBookManager.handle(event);
     }
