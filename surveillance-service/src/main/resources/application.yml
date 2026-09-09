@@ -54,4 +54,4 @@ spring:
 
   logging:
     level:
-      com.tradingplatform.surveillance-sevice: DEBUG
+      com.tradingplatform.surveillance_service: DEBUG
