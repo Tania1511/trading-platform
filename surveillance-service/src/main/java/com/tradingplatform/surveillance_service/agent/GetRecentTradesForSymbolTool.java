@@ -31,7 +31,7 @@ public class GetRecentTradesForSymbolTool implements AgentTool{
     }
 
     @Override
-    public String Description() {
+    public String description() {
         return "Fetch recent executed trades for a given symbol, to see how much genuine "
                 + "trading activity is happening around a suspicious order.";
     }

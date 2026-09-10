@@ -8,7 +8,7 @@ public interface AgentTool {
 
     String name();
 
-    String Description();
+    String description();
 
     Map<String, Object> inputSchema();
 

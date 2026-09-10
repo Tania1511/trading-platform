@@ -26,7 +26,7 @@ public class GetOrderDetailsTool implements AgentTool{
     }
 
     @Override
-    public String Description() {
+    public String description() {
         return "Fetch the current full details of an order by its internal order Id,"
                 + "including its status, price, quantity, and how much has been filled.";
     }
