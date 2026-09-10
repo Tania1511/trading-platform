@@ -34,9 +34,27 @@ public class SpoofingDetectorTest {
 
     @Test
     void smallOrder_isNeverFlagged_regardlessOfFillRatioOrSpeed() {
-        Optional<SpoofingSignal> signal = spoofingDetector.evaluate(event(new BigDecimal("100"), new BigDecimal("2"),5));
-
+        Optional<SpoofingSignal> signal = spoofingDetector.evaluate(event(new BigDecimal("5"), BigDecimal.ZERO,1));
+        assertThat(signal).isEmpty();
     }
 
+
+    @Test
+    void largeOrder_mostlyFilled_isNotFlagged(){
+        Optional<SpoofingSignal> signal = spoofingDetector.evaluate(event(new BigDecimal("100"), new BigDecimal("90"),5));
+        assertThat(signal).isEmpty();
+    }
+
+    @Test
+    void largeOrder_unfilled_butRestedForALongTime_isNotFlagged(){
+        Optional<SpoofingSignal> signal = spoofingDetector.evaluate(event(new BigDecimal("100"), new BigDecimal("90"),600));
+        assertThat(signal).isEmpty();
+    }
+
+    @Test
+    void exactlyAtEveryThresholdBoundary_isFlagged(){
+        Optional<SpoofingSignal> signal = spoofingDetector.evaluate(event(new BigDecimal("50"), new BigDecimal("5"),20));
+        assertThat(signal).isPresent();
+    }
 
 }
