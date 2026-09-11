@@ -26,13 +26,13 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
       properties:
-        spring.json.trusted.packages: com.tradingplatform.surveillance-service.event
-        spring.json.value.default.type: com.tradingplatform.surveillance-service.event.OrderCanceledEvent
+        spring.json.trusted.packages: com.tradingplatform.surveillance_service.event
+        spring.json.value.default.type: com.tradingplatform.surveillance_service.event.OrderCanceledEvent
       auto-offset-reset: earliest
 
 
-  server:
-    port: 8081
+server:
+  port: 8081
 
 
   management:

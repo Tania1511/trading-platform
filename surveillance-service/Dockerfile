@@ -8,5 +8,5 @@ RUN mvn clean package -DskipTests
 #-----------------------------------------
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
-COPY --form=build /app/target/surveillance-service-*.jar app.jar
+COPY --from=build /app/target/surveillance-service-*.jar app.jar
 ENTRYPOINT ["java","-jar","app.jar"]

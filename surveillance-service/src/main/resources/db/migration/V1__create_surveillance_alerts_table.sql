@@ -1,8 +1,8 @@
 CREATE TABLE surveillance_alerts(
 
     id                  UUID PRIMARY KEY,
-    orderId             UUID NOT NULL,
-    clientOrderId       VARCHAR(255) NOT NULL,
+    order_id             UUID NOT NULL,
+    client_order_id       VARCHAR(255) NOT NULL,
     symbol              VARCHAR(255) NOT NULL,
     original_quantity    NUMERIC(19,4) NOT NULL,
     filled_quantity     NUMERIC(19,4) NOT NULL,

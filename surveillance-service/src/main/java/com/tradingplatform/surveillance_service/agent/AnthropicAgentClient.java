@@ -29,9 +29,9 @@ public class AnthropicAgentClient {
         this.tools = tools;
     }
 
-    public String investigate(String intialPrompt) {
+    public String investigate(String initialPrompt) {
         ArrayNode messages = objectMapper.createArrayNode();
-        messages.add(userTextMessage(intialPrompt));
+        messages.add(userTextMessage(initialPrompt));
 
         for (int iteration = 0; iteration < MAX_ITERATIONS; iteration++) {
             ObjectNode response = sendRequest(messages);
@@ -90,8 +90,8 @@ public class AnthropicAgentClient {
         try{
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(agentProperties.getAnthropicBaseUrl() + "/v1/messages"))
-                    .header("x-api-key", agentProperties.getAnthropicApiKey())
-                    .header("anthropic-version", "2023-06-01")
+//                    .header("x-api-key", agentProperties.getAnthropicApiKey())
+//                    .header("anthropic-version", "2023-06-01")
                     .header("content-type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(requestBody)))
                     .build();
