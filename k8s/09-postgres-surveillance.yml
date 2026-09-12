@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-surveillance-pvc
+  namespace: trading-platform
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-surveillance
+  namespace: trading-platform
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-surveillance
+  template:
+    metadata:
+      labels:
+        app: postgres-surveillance
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: postgres-surveillance-secret
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "surveillanceapp", "-d", "surveillancedb"]
+            initialDelaySeconds: 5
+            periodSeconds: 5
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-surveillance-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-surveillance
+  namespace: trading-platform
+spec:
+  selector:
+    app: postgres-surveillance
+  ports:
+    - port: 5432
+      targetPort: 5432
