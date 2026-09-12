@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+
+:root {
+
+    --bg: #0d1117;
+    --panel: #161b22;
+    --panel-raised: #1c2128;
+    --border: #2d333b;
+    --test: #e6edf3;
+    --text-muted: #7d8590;
+    --buy: #3fb950;
+    --sell: #f85149;
+    --live: #58a6ff;
+
+    --font-ui: 'Inter', system-ui, sans-serif;
+    --font-data: 'IBM Plex Mono', 'SF Mono', monospace;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-ui);
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+}
+
+button{
+    font-family: var(--font-ui);
+}
+
+:focus-visible {
+    outline: 2px solid var(--live);
+    outline-offset: 2px;
+}
+
+.mono {
+    font-family: var(--font-data);
+    font-variant-numeric: tabular-nums; /* keeps digits aligned in columns even with proportional-width characters mixed in - real-terminal-grade number rendering. */
+}
+
+.buy-text {
+    color: var(--buy);
+}
+
+.sell-text {
+    color: var(--sell);
+}
+
+@media (prefers-reduced-motion: reduce){
+    *{
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+@keyframes flash-in {
+    from { background-color: rgba(88, 166, 255, 0.18); }
+    to { background-color: transparent; }
+}
+
+.row-flash {
+    animation: flash-in 900ms ease-out;
+}
