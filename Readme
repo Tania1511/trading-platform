@@ -1,0 +1,119 @@
+# Trading Platform
+
+A real-time order execution, matching, position-keeping, and trade
+surveillance platform built to exercise production-grade distributed
+systems patterns end to end: event-driven microservices, idempotent
+processing, database-per-service, container orchestration, CI/CD, and
+an agentic AI compliance investigator.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    subgraph Client
+        UI[React Dashboard]
+    end
+
+    subgraph Services
+        OG[Order Gateway]
+        ME[Matching Engine]
+        PS[Position Service]
+        SS[Surveillance Service]
+    end
+
+    subgraph Infra
+        K[(Kafka)]
+        R[(Redis)]
+        PG1[(Postgres - orderdb)]
+        PG2[(Postgres - positiondb)]
+        PG3[(Postgres - surveillancedb)]
+        AN[Anthropic API]
+    end
+
+    UI -- REST + WebSocket --> OG
+    OG -- order-events --> K
+    K -- order-events --> ME
+    K -- order-events --> OG
+    ME -- trade-events --> K
+    K -- trade-events --> PS
+    K -- trade-events --> OG
+    PS -- position-events --> K
+    K -- position-events --> OG
+    OG -- order-cancelled-events --> K
+    K -- order-cancelled-events --> SS
+    SS -- tool calls --> OG
+    SS -- tool calls --> PS
+    SS -- investigate --> AN
+
+    OG --- PG1
+    OG --- R
+    PS --- PG2
+    SS --- PG3
+```
+
+## Services
+
+| Service | Responsibility | Tech |
+|---|---|---|
+| **Order Gateway** | Accepts orders via REST, idempotent placement, publishes order events, bridges Kafka → WebSocket for the live dashboard | Spring Boot, Kafka, Redis, Postgres, WebSocket/STOMP |
+| **Matching Engine** | In-memory limit order book per symbol, price-time priority matching, produces trades | Spring Boot, Kafka (no HTTP surface by design) |
+| **Position Service** | Event-sourced position/P&L tracking with weighted average cost, idempotent trade consumption, trade blotter history | Spring Boot, Kafka, Postgres |
+| **Surveillance Service** | Rule-based spoofing detection, AI agent investigation with real tool-calling, compliance alert API | Spring Boot, Kafka, Postgres, Anthropic API |
+
+## Why these design decisions (interview talking points)
+
+- **Event-driven, not synchronous REST-to-REST** — services are decoupled;
+  a slow/down Matching Engine never blocks order placement.
+- **Idempotency at two layers** — client-order-ID uniqueness (DB
+  constraint + Redis fast-path cache) on the way in, event-ID dedup
+  table on the way out (Position Service, Surveillance Service) —
+  Kafka's at-least-once delivery is handled correctly, not ignored.
+- **Database-per-service** — Order Gateway, Position Service, and
+  Surveillance Service each own an isolated Postgres instance; no
+  service ever queries another's database directly.
+- **Price-time priority matching** — a real limit order book (two
+  priority queues, price + arrival-sequence ordering), not a toy CRUD
+  simulation.
+- **Weighted average cost + realized P&L** — correctly handles adds,
+  partial closes, full closes, and long/short flips in one formula.
+- **Two-stage AI surveillance** — cheap deterministic rules run on
+  every event; the expensive LLM investigation (with real tool-calling
+  against live services) only runs on the rare flagged case.
+- **Kubernetes** — Deployments, Services, Secrets, PVCs, readiness vs.
+  liveness vs. startup probes, and the deliberate simplifications made
+  (single-replica Postgres/Kafka rather than StatefulSets) are all
+  understood tradeoffs, not oversights.
+
+## Running locally
+
+**Docker Compose** (fastest path):
+```bash
+docker compose up --build
+```
+
+**Kubernetes (Minikube)**:
+```bash
+eval $(minikube docker-env)
+# build all 4 service images with `docker build -t <service>:latest .`
+kubectl apply -f k8s/
+```
+
+The React dashboard (`dashboard/`) needs a `.env` (see `.env.example`)
+pointing at whichever backend you're running against, then:
+```bash
+cd dashboard && npm install && npm run dev
+```
+
+## Repository layout
+
+```
+trading-platform/
+├── order-gateway/        # REST API, idempotency, WebSocket bridge
+├── matching-engine/       # Order book + matching algorithm
+├── position-service/      # Position/P&L tracking + trade blotter
+├── surveillance-service/  # Rule-based detection + AI agent
+├── dashboard/             # React live dashboard
+├── k8s/                   # Kubernetes manifests
+├── docker-compose.yml
+└── .github/workflows/     # CI: test + build + push image per service
+```
