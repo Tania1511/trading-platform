@@ -21,6 +21,12 @@ spring:
       hibernate:
         format_sql: true
 
+  security:
+    oauth2:
+      resourceServer:
+        jwt:
+          issuer-url: http://keycloak:8080/realms/trtading-platform
+          
   kafka:
     bootstrap-servers: kafka:9092
     producer:
