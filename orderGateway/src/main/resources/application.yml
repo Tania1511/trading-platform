@@ -26,7 +26,7 @@ spring:
       resourceServer:
         jwt:
           issuer-url: http://keycloak:8080/realms/trtading-platform
-          
+
   kafka:
     bootstrap-servers: kafka:9092
     producer:
