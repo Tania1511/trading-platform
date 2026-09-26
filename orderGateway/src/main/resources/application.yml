@@ -23,9 +23,9 @@ spring:
 
   security:
     oauth2:
-      resourceServer:
+      resourceserver:
         jwt:
-          issuer-url: http://keycloak:8080/realms/trtading-platform
+          issuer-uri: http://keycloak:8080/realms/trtading-platform
 
   kafka:
     bootstrap-servers: kafka:9092
