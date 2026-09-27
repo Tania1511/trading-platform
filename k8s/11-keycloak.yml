@@ -27,13 +27,18 @@ data:
                 "protocol": "openid-connect",
                 "secret": "surveillance-service-secret",
                 "serviceAccountsEnabled": true,
-                "standardFlowEnabled": false
+                "standardFlowEnabled": false,
+                "directAccessGrantsEnabled": false
             }
         ],
         "users": [
             {
                 "username": "trader1",
                 "enabled": true,
+                "emailVerified": true,
+                "firstName": "Trader",
+                "lastName": "One",
+                "requiredActions": [],
                 "credentials": [ 
                     { "type": "password", "value": "trader1234", "temporary": false }
                 ]
@@ -66,6 +71,8 @@ spec:
               value: admin
             - name: KEYCLOAK_ADMIN_PASSWORD
               value: admin
+#            - name: KC_HOSTNAME
+#              value: "keycloak"
           ports:
             - containerPort: 8080
           volumeMounts:
