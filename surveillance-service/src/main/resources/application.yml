@@ -51,6 +51,8 @@ server:
       model: claude-sonnet-5
       order-gateway-url: http://order-gateway:8081
       position-service-url: http://position-service:8081
+      keycloak-token-url: http://keycloak:8080/realms/trading-platform/protocol/openid-connect/token
+      client-id: surveillance-service
 
   logging:
     level:

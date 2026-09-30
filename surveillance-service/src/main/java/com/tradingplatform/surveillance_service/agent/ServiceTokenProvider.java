@@ -40,7 +40,7 @@ public class ServiceTokenProvider {
                     + "&client_secret=" + agentProperties.getClientSecret();
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(agentProperties.getKeycloakTokenUrl()))
+                    .uri(URI.create(agentProperties.getKeyCloakTokenUrl()))
                     .header("Content-Type", "application/x-www-form-urlencoded")
                     .POST(HttpRequest.BodyPublishers.ofString(form))
                     .build();

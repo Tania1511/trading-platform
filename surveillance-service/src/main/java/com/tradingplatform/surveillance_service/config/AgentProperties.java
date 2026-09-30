@@ -16,7 +16,7 @@ public class AgentProperties {
     private String orderGatewayUrl = "http://order-gateway:8081";
     private String positionServiceUrl = "https://position-service:8081";
 
-    private String getKeyCloakTokenUrl = "http://keycloak:8080/realms/trading-platform/protocol/openid-connect/token";
+    private String keyCloakTokenUrl = "http://keycloak:8080/realms/trading-platform/protocol/openid-connect/token";
     private String clientId = "surveillance-service";
     private String clientSecret;
 
@@ -60,12 +60,12 @@ public class AgentProperties {
         this.positionServiceUrl = positionServiceUrl;
     }
 
-    public String getGetKeyCloakTokenUrl() {
-        return getKeyCloakTokenUrl;
+    public String getKeyCloakTokenUrl() {
+        return keyCloakTokenUrl;
     }
 
-    public void setGetKeyCloakTokenUrl(String getKeyCloakTokenUrl) {
-        this.getKeyCloakTokenUrl = getKeyCloakTokenUrl;
+    public void setGetKeyCloakTokenUrl(String keyCloakTokenUrl) {
+        this.keyCloakTokenUrl = keyCloakTokenUrl;
     }
 
     public String getClientId() {

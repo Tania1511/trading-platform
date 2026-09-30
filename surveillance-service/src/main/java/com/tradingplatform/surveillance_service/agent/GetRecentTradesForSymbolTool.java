@@ -20,9 +20,11 @@ public class GetRecentTradesForSymbolTool implements AgentTool{
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final AgentProperties agentProperties;
+    private final ServiceTokenProvider serviceTokenProvider;
 
-    public GetRecentTradesForSymbolTool(AgentProperties agentProperties) {
+    public GetRecentTradesForSymbolTool(AgentProperties agentProperties, ServiceTokenProvider serviceTokenProvider) {
         this.agentProperties = agentProperties;
+        this.serviceTokenProvider = serviceTokenProvider;
     }
 
     @Override
@@ -51,6 +53,7 @@ public class GetRecentTradesForSymbolTool implements AgentTool{
         try{
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(agentProperties.getPositionServiceUrl() + "/api/trades"))
+                    .header("Authorization", "Bearer" + serviceTokenProvider.getAccessToken())
                     .GET()
                     .build();
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());

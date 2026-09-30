@@ -15,9 +15,11 @@ public class GetOrderDetailsTool implements AgentTool{
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final AgentProperties agentProperties;
+    private final ServiceTokenProvider serviceTokenProvider;
 
-    public GetOrderDetailsTool(AgentProperties agentProperties) {
+    public GetOrderDetailsTool(AgentProperties agentProperties, ServiceTokenProvider serviceTokenProvider) {
         this.agentProperties = agentProperties;
+        this.serviceTokenProvider = serviceTokenProvider;
     }
 
     @Override
@@ -46,6 +48,7 @@ public class GetOrderDetailsTool implements AgentTool{
         try{
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(agentProperties.getOrderGatewayUrl() + "/orders/"+orderID))
+                    .header("Authorization", "Bearer" + serviceTokenProvider.getAccessToken())
                     .GET()
                     .build();
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
