@@ -36,6 +36,8 @@ spec:
 #                secretRef:
 #                  name: anthropic-secret
 #                  key: ANTHROPIC_API_KEY
+            - name: SURVEILLANCE_AGENT_CLIENT_SECRET
+              value: "surveillance-service-secret"
           resources:
             requests:
               memory: "384Mi"
