@@ -1,11 +1,14 @@
 const ORDER_API = import.meta.env.VITE_ORDER_API_URL || 'http://order-gateway:8081';
-const POSITION_API = import.meta.env.VITE_POSITION_API_URL || 'http://position-service:8081';
+const POSITION_API = import.meta.env.VITE_POSITION_API_URL || 'http://position-service:8083';
 
 
 export async function placeOrder(order) {
     const res = await fetch(`${ORDER_API}/orders`, {
         method: 'POST',
-        headers: { 'Content-Type' : 'application/json' },
+        headers: { 
+            'Content-Type' : 'application/json',
+            Authorization: 'Bearer ${token}', 
+        },
         body: JSON.stringify(order),
     });
 
@@ -18,14 +21,18 @@ export async function placeOrder(order) {
 }
 
 export async function fetchPositions() {
-    const res = await fetch(`${POSITION_API}/api/positions`);
+    const res = await fetch(`${POSITION_API}/api/positions`, {
+        headers: {Authorization: `Bearer ${token}` },
+    });
     if(!res.ok)
         throw new Error('Failed to load positions');
     return res.json();
 }
 
 export async function fetchRecentTrades() {
-    const res = await fetch(`${POSITION_API}/api/trades`);
+    const res = await fetch(`${POSITION_API}/api/trades`, {
+        headers: {Authorization: `Bearer ${token}` },
+    });
     if(!res.ok)
         throw new Error('Failed to load trades');
     return res.json();
