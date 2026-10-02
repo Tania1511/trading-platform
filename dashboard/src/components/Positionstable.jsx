@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { fetchPositions } from "../api";
 
-export default function PositionsTable({ subscribe }) {
+export default function PositionsTable({ subscribe, token }) {
     const [positions, setPositions] = useState([]);
     const [flashKey, setFlashKey] = useState(null);
 
     useEffect(() => {
-        fetchPositions().then(setPositions).catch(() => {});
-    },[]);
+        fetchPositions(token).then(setPositions).catch(() => {});
+    },[token]);
 
     useEffect(() => {
         return subscribe('/topic/positions', (update) => {

@@ -2,7 +2,7 @@ const ORDER_API = import.meta.env.VITE_ORDER_API_URL || 'http://order-gateway:80
 const POSITION_API = import.meta.env.VITE_POSITION_API_URL || 'http://position-service:8083';
 
 
-export async function placeOrder(order) {
+export async function placeOrder(order, token) {
     const res = await fetch(`${ORDER_API}/orders`, {
         method: 'POST',
         headers: { 
@@ -20,7 +20,7 @@ export async function placeOrder(order) {
     return res.json();    
 }
 
-export async function fetchPositions() {
+export async function fetchPositions(token) {
     const res = await fetch(`${POSITION_API}/api/positions`, {
         headers: {Authorization: `Bearer ${token}` },
     });
@@ -29,7 +29,7 @@ export async function fetchPositions() {
     return res.json();
 }
 
-export async function fetchRecentTrades() {
+export async function fetchRecentTrades(token) {
     const res = await fetch(`${POSITION_API}/api/trades`, {
         headers: {Authorization: `Bearer ${token}` },
     });

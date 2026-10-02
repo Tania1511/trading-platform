@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { fetchRecentTrades } from "../api";
 
-export default function TradeBlotter ({ subscribe }) {
+export default function TradeBlotter ({ subscribe, token}) {
     
     const [trades, setTrades] = useState([]);
     const [flashId, setFlashId] = useState(null);
 
     useEffect(() => {
-        fetchRecentTrades().then(setTrades).catch(() =>{});
-    },[]);
+        fetchRecentTrades(token).then(setTrades).catch(() =>{});
+    },[token]);
 
     useEffect(() => {
         return subscribe('/topic/trades', (trade) => {

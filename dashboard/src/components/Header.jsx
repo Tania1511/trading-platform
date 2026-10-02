@@ -19,22 +19,27 @@ export default function Header ({ connected }) {
                 </span>
             </div>
             
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px'}}>
-                <span 
-                    aria-hidden="true"
-                    style={{
-                        width: '8px',
-                        height: '8px',
-                        borderRadius: '50%',
-                        background: connected ? 'var(--buy)' : 'var(--sell)',
-                        display: 'inline-block',
-                    }}
-                />
-                <span style={{ color: 'var(--text-muted)' }}>
-                    {connected ? 'Live' : 'Reconnecting...'}
-                </span>
-            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '18px', fontSize: '13px'}} >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px'}}>
+                    <span 
+                        aria-hidden="true"
+                        style={{
+                            width: '8px',
+                            height: '8px',
+                            borderRadius: '50%',
+                            background: connected ? 'var(--buy)' : 'var(--sell)',
+                            display: 'inline-block',
+                        }}
+                    />
+                    <span style={{ color: 'var(--text-muted)' }}>
+                        {connected ? 'Live' : 'Reconnecting...'}
+                    </span>
+                </div>
 
+                <button onClick={onLogout} style= {{ background: 'transparent', border: '1px solid var(--border)',color: 'var(--text-muted)',borderRadius: '4px',padding: '5px 12px',fontSize: '12px',cursor: 'pointer', }}>
+                    Sign out
+                </button>
+            </div>        
         </header>   
     )
 }

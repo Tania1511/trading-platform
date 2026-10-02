@@ -20,7 +20,7 @@ const inputStyle = {
 };
 
 
-export default function OrderForm() {
+export default function OrderForm({ token }) {
 
     const[form, setForm] = useState({ symbol: 'AAPL', side: 'BUY', price: '', quantity: ''});
     const[status, setStatus] = useState(null);
@@ -47,7 +47,9 @@ export default function OrderForm() {
                 side: form.side,
                 price: Number(form.price),
                 quantity: Number(form.quantity),
-            });
+            },
+            token,
+        );
 
             setStatus({ type: 'success', message: `Order placed - status: ${result.status}` });
             setForm((prev) => ({ 
