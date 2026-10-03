@@ -1,0 +1,18 @@
+{
+  "type": "record",
+  "name": "OrderCanceledEvent",
+  "namespace": "com.tradingplatform.schemas",
+  "doc": "Published by Order Gateway when an order is canceled. This .avsc file is the contract now - not a hand-copied Java class in each service. both the producer (order-gateway) and the consumer (surveillance-service) generate their own java class from this same file at build time, via the avro-maven-plugin - no shared JAR, no shared bytecode, just a shared schema definition.",
+  "fields": [
+    { "name": "eventId", "type": "string" },
+    { "name": "orderId", "type": "string" },
+    { "name": "clientOrderId", "type": "string" },
+    { "name": "symbol", "type": "string" },
+    { "name": "side", "type": "string" },
+    { "name": "price", "type": "string", "doc": "BigDecimal, round-tripped via toString()/new BigDecimal(string) - see the chat explanation on why not avro's decimal logical type yet." },
+    { "name": "originalQuantity", "type": "string" },
+    { "name": "filledQuantity", "type": "string" },
+    { "name": "placedAt", "type": "string", "doc": "Instant, via Instant.toString() (ISO-8601) / Instant.parse()" },
+    { "name": "canceledAt", "type": "string" }
+  ]
+}
