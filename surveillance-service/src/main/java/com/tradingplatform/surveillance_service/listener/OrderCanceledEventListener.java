@@ -11,7 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class OrderCanceledEventListener {
@@ -30,9 +33,21 @@ public class OrderCanceledEventListener {
     }
 
 
-    @KafkaListener(topics = "order-cancelled-events", groupId = "surveillance-service")
-    public void onOrderCancel(OrderCanceledEvent event){
+    @KafkaListener(topics = "order-cancelled-events", groupId = "surveillance-service", containerFactory = "orderCanceledEventListenerContainerFactory")
+    public void onOrderCancel(com.tradingplatform.schemas.OrderCanceledEvent avroEvent){
 
+        OrderCanceledEvent event = new OrderCanceledEvent(
+                UUID.fromString(avroEvent.getEventId().toString()),
+                UUID.fromString(avroEvent.getOrderId().toString()),
+                avroEvent.getClientOrderId().toString(),
+                avroEvent.getSymbol().toString(),
+                avroEvent.getSide().toString(),
+                new BigDecimal(avroEvent.getPrice().toString()),
+                new BigDecimal(avroEvent.getOriginalQuantity().toString()),
+                new BigDecimal(avroEvent.getFilledQuantity().toString()),
+                Instant.parse(avroEvent.getPlacedAt().toString()),
+                Instant.parse(avroEvent.getCanceledAt().toString())
+        );
         Optional<SpoofingSignal> signal = spoofingDetector.evaluate(event);
 
         if(signal.isEmpty()){
