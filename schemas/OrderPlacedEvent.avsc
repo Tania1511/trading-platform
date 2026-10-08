@@ -1,0 +1,16 @@
+{
+  "type": "record",
+  "name": "OrderPlacedEvent",
+  "namespace": "com.tradingplatform.schemas",
+  "doc": "Published by Order Gateway when a genuinely new order is created. Consumed by: Matching Engine, Order Gateway's own demo listener, and Order Gateway's dashboard WebSocket bridge.",
+  "fields": [
+    { "name": "eventId", "type": "string" },
+    { "name": "orderId", "type": "string" },
+    { "name": "clientOrderId", "type": "string" },
+    { "name": "symbol", "type": "string" },
+    { "name": "side", "type": "string" },
+    { "name": "price", "type": "string" },
+    { "name": "quantity", "type": "string" },
+    { "name": "occurredAt", "type": "string" }
+  ]
+}
